@@ -13,17 +13,24 @@ Rasmussen, D., & Eliasmith, C. (2013). A neural reinforcement learning model for
 Setup
 =====
 
-This code relies on Nengo version 1.4, which can be downloaded `here<http://ctnsrv.uwaterloo.ca:8080/jenkins/job/Nengo/lastSuccessfulBuild/artifact/nengo-latest.zip>`_.  Extract Nengo into a location of your choice, which we will call ``<nengo>``.
+This code relies on Nengo version 1.4, which can be downloaded `here <http://ctnsrv.uwaterloo.ca:8080/jenkins/job/Nengo/lastSuccessfulBuild/artifact/nengo-latest.zip>`_.  Extract Nengo into a location of your choice, which we will call ``<nengo>``.
 
 Then check out this repository into a different folder ``<nhrl>`` via
 
 .. code-block:: bash
+
     cd nhrl
     git clone https://github.com/drasmuss/nhrlmodel.git
 
 The model can then be run through Nengo:
 
 .. code-block:: bash
-    /<nengo>/nengo-cl <nhrl>/hrlproject/misc/run.py delivery
+
+    <nengo>/nengo-cl <nhrl>/hrlproject/misc/run.py delivery
 
 where ``delivery`` can be swapped for various keywords to run the model in different environments (see ``run.py``).
+
+Note
+====
+
+The model is written in Python, and uses Jython to interact with the Java-based Nengo 1.4.  Hence the code style is a bit of a mix of Java and Python conventions depending on where the code originated, which the reader will have to pardon.
