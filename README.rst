@@ -4,6 +4,8 @@ Neural model of hierarchical reinforcement learning
 
 This code instantiates the model described in
 
+Rasmussen, D., Voelker, A., & Eliasmith, C. (2017). A neural model of hierarchical reinforcement learning. PLoS ONE
+
 Rasmussen, D. (2014). Hierarchical reinforcement learning in a biologically plausible neural architecture. University of Waterloo.
 
 Rasmussen, D., & Eliasmith, C. (2014). A neural model of hierarchical reinforcement learning. Proceedings of the 36th Annual Conference of the Cognitive Science Society
