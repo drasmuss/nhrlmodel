@@ -626,7 +626,7 @@ def run_gridworld(args, seed=None):
     net.add(agent)
 
     env = gridworldenvironment.GridWorldEnvironment(
-        stateD, actions, HRLutils.datafile("smallgrid.txt"), cartesian=True,
+        stateD, actions, HRLutils.datafile("potjansgrid.txt"), cartesian=True,
         delay=(0.6, 0.9), datacollection=False)
     net.add(env)
 
@@ -640,10 +640,16 @@ def run_gridworld(args, seed=None):
     net.connect(agent.getOrigin("action_output"), env.getTermination("action"))
     net.connect(agent.getOrigin("Qs"), env.getTermination("Qs"))
 
-    net.add_to_nengo()
-    view = timeview.View(net.network, update_frequency=5)
-    view.add_watch(gridworldwatch.GridWorldWatch())
-    view.restore()
+    # net.add_to_nengo()
+    # view = timeview.View(net.network, update_frequency=5)
+    # view.add_watch(gridworldwatch.GridWorldWatch())
+    # view.restore()
+
+    net.network.simulator.run(0, 1000, 0.001)
+
+    print "latencies"
+    print len(env.latencies)
+    print env.latencies
 
 
 def gen_evalpoints(filename, seed=None):
@@ -754,7 +760,7 @@ if __name__ == "__main__":
                               "noiselevel": 0.05},
                              bias=0.25, seed=seed, flat=False)
     elif sys.argv[1] == "gridworld":
-        run_gridworld({}, seed=seed)
+        run_gridworld({"learningrate": 1e-9}, seed=seed)
     elif sys.argv[1] == "evalpoints":
         gen_evalpoints(sys.argv[3], seed=seed)
     else:
