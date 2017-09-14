@@ -16,9 +16,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(
 # from misc import HRLutils
 # HRLutils.full_reset()
 
-from hrlproject.misc import HRLutils, gridworldwatch, boxworldwatch
+from hrlproject.misc import HRLutils, gridworldwatch
 from hrlproject.agent import smdpagent, errorcalc2, actionvalues, memory
-from hrlproject.environment import (gridworldenvironment, boxenvironment,
+from hrlproject.environment import (gridworldenvironment,
                                     contextenvironment, deliveryenvironment,
                                     placecell_bmp, badreenvironment)
 from hrlproject.simplenodes import (datanode, terminationnode, errornode,
@@ -271,12 +271,64 @@ def test_errornode():
     net.view()
 
 
+def optimal_run(seed=None):
+    if seed is not None:
+        HRLutils.set_seed(seed)
+    seed = HRLutils.SEED
+
+    net = nef.Network("optimal_run")
+
+    actions = [("up", [0, 1]), ("right", [1, 0]),
+               ("down", [0, -1]), ("left", [-1, 0])]
+
+
+    env = deliveryenvironment.DeliveryEnvironment(
+        actions, HRLutils.datafile("contextmap.bmp"),
+        colormap={-16777216: "wall", -1: "floor", -256: "a", -2088896: "b"},
+        imgsize=(5, 5), dx=0.001, placedev=0.5)
+    net.add(env)
+
+    class ActionRelay(nef.SimpleNode):
+        def __init__(self):
+            self.action = actions[0]
+
+            nef.SimpleNode.__init__(self, "ActionRelay")
+
+        def tick(self):
+            pass
+
+        def termination_action_in(self, x, dimensions=4):
+            self.action = actions[x.index(max(x))]
+
+        def origin_action_out(self):
+            return self.action[1]
+
+    em = ActionRelay()
+    net.add(em)
+
+    net.connect(env.getOrigin("optimal_move"), em.getTermination("action_in"))
+    net.connect(em.getOrigin("action_out"), env.getTermination("action"))
+
+    data = datanode.DataNode(period=5,
+                             filename=HRLutils.datafile("dataoutput_%s.txt" %
+                                                        seed))
+    net.add(data)
+    data.record(env.getOrigin("reward"))
+
+    #     net.add_to_nengo()
+    net.run(1000)
+
+
+#     net.view()
+
+
 # test_terminationnode()
 # test_bmp()
-test_placecell_bmp()
+# test_placecell_bmp()
 # test_errornode()
 # test_decoderlearning()
 # test_memorynetwork()
 # test_selectioncircuit()
 # test_errorcalc()
 # test_actionvalues()
+optimal_run(seed=0)

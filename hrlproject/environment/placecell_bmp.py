@@ -73,7 +73,7 @@ class PlaceCellEnvironment(EnvironmentTemplate):
         # note: making the value small, so that the noise node will give us
         # some random exploration as well
         self.create_origin("optimal_move",
-                           lambda: [0.1 if self.optimal_move == a[0] else 0.0
+                           lambda: [1.0 if self.optimal_move == a[0] else 0.0
                                     for a in self.actions])
 
     def tick(self):
